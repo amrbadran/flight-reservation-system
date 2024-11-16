@@ -18,15 +18,7 @@ public class FlightService {
 
     public List<FlightDTO> getAllFlights() {
         List<Flight> flights = flightRepository.findAll();
-        List<FlightDTO> flightDTOS = new ArrayList<>();
-
-        flights.forEach((f -> {
-            flightDTOS.add(
-                    new FlightDTO(f.getArrivalAirport().getId(),
-                    f.getDepartureAirport().getId(),
-                    f.getDepartureDate(),
-                    f.getPrice()));
-        }));
+        List<FlightDTO> flightDTOS = flightToDTOS(flights);
 
         return flightDTOS;
     }
@@ -39,5 +31,19 @@ public class FlightService {
                 flight.getDepartureAirport().getId(),
                 flight.getDepartureDate(),
                 flight.getPrice());
+    }
+
+
+    public List<FlightDTO> flightToDTOS(List<Flight> flights) {
+        List<FlightDTO> flightDTOS = new ArrayList<>();
+        flights.forEach((f -> {
+            flightDTOS.add(
+                    new FlightDTO(f.getArrivalAirport().getId(),
+                            f.getDepartureAirport().getId(),
+                            f.getDepartureDate(),
+                            f.getPrice()));
+        }));
+
+        return flightDTOS;
     }
 }
