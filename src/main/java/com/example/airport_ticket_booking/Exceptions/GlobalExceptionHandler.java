@@ -10,8 +10,8 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(AirportNotFoundException.class)
-    public ResponseEntity<Map<String,Object>> handleAirportNotFoundException(AirportNotFoundException ex){
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Map<String,Object>> handleAirportNotFoundException(EntityNotFoundException ex){
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("status", HttpStatus.NOT_FOUND.value());
         errorResponse.put("message", ex.getMessage());

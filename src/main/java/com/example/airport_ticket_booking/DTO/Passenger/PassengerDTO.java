@@ -1,4 +1,8 @@
 package com.example.airport_ticket_booking.DTO.Passenger;
 
-public class PassengerDTO {
+import jakarta.validation.constraints.NotEmpty;
+
+public record PassengerDTO(
+         String username
+) {
 }
