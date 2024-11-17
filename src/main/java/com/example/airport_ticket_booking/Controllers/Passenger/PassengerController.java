@@ -84,4 +84,23 @@ public class PassengerController {
         throw new AccessDeniedException("You can't Access this resource");
     }
 
+    @Operation(summary = "Edit Bookings for Passenger", description = "This endpoint Edit a booking by some passenger in system by its id and booking body that have flight id and flightClass")
+    @PutMapping("/{pid}/bookings/{bid}")
+    public ResponseEntity<BookingDTO> editPassengerBooking(@PathVariable Long pid,
+                                                           @PathVariable Long bid,
+                                                           @RequestHeader("Authorization") String authorizationHeader,
+                                                           @RequestBody @Valid BookingDTO bookingBody) {
+
+        String username = jwtService.extractUsernameFromHeader(authorizationHeader);
+        if (authorizationService.isPassengerAuthorizedToBooking(pid, username)) {
+            bookingBody.setPassengerId(pid);
+
+            BookingDTO booking = bookingService.editBooking(bookingBody, bid);
+            return new ResponseEntity<>(booking, HttpStatus.OK);
+        }
+
+        throw new AccessDeniedException("You can't Access this resource");
+
+    }
+
 }

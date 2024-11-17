@@ -1,7 +1,7 @@
 package com.example.airport_ticket_booking.DTO.Booking;
 
-import com.example.airport_ticket_booking.Entities.Flight.FlightClass;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,13 +14,13 @@ public class BookingDTO {
     @NotNull(message = "flight id can't be empty")
     private Long flightId;
 
-    @NotNull(message = "passenger id can't be empty")
     private Long passengerId;
 
     @NotNull(message = "flight class can't be empty")
-    private FlightClass flightClass;
+    @Pattern(regexp = "Economy|Business|First", message = "flightClass must be one of: ECONOMY, BUSINESS, FIRST")
+    private String flightClass;
 
-    public BookingDTO(Long flightId, Long passengerId, FlightClass flightClass) {
+    public BookingDTO(Long flightId, Long passengerId, String flightClass) {
         this.flightId = flightId;
         this.passengerId = passengerId;
         this.flightClass = flightClass;

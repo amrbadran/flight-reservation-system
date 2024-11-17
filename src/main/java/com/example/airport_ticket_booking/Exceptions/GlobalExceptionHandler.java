@@ -1,6 +1,7 @@
 package com.example.airport_ticket_booking.Exceptions;
 
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +56,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
+        errorResponse.put("message", "Expired JWT");
+        errorResponse.put("timestamp", System.currentTimeMillis());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException ex) {
         List<String> errorMessages = ex.getBindingResult()
@@ -65,4 +76,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errorMessages);
     }
+
+
+
 }

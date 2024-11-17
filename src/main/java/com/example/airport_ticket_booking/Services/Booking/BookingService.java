@@ -3,6 +3,7 @@ package com.example.airport_ticket_booking.Services.Booking;
 import com.example.airport_ticket_booking.DTO.Booking.BookingDTO;
 import com.example.airport_ticket_booking.Entities.Booking.Booking;
 import com.example.airport_ticket_booking.Entities.Flight.Flight;
+import com.example.airport_ticket_booking.Entities.Flight.FlightClass;
 import com.example.airport_ticket_booking.Entities.Passenger.Passenger;
 import com.example.airport_ticket_booking.Exceptions.EntityNotFoundException;
 import com.example.airport_ticket_booking.Repositories.Booking.BookingRepository;
@@ -38,7 +39,7 @@ public class BookingService {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Booking is not found"));
 
-        return new BookingDTO(booking.getFlight().getId(), booking.getPassenger().getId(), booking.getFlightClass());
+        return new BookingDTO(booking.getFlight().getId(), booking.getPassenger().getId(), booking.getFlightClass().toString());
     }
 
 
@@ -62,17 +63,35 @@ public class BookingService {
     }
 
     public BookingDTO addBooking(BookingDTO bookingDTO) {
-        Flight flight = flightRepository.getFlightById(bookingDTO.getFlightId());
-        Passenger passenger = passengerRepository.getPassengerById(bookingDTO.getPassengerId());
-
-        if (flight == null || passenger == null) {
-            throw new EntityNotFoundException("Flight Id or Passenger Id isn't Valid");
-        }
+        Flight flight = flightRepository.findById(bookingDTO.getFlightId())
+                .orElseThrow(() -> new EntityNotFoundException("Flight Id isn't valid"));
+        Passenger passenger = passengerRepository.findById(bookingDTO.getPassengerId())
+                .orElseThrow(() -> new EntityNotFoundException("Passenger Id isn't valid"));
 
         Booking booking = new Booking();
         booking.setPassenger(passenger);
         booking.setFlight(flight);
-        booking.setFlightClass(bookingDTO.getFlightClass());
+        booking.setFlightClass(FlightClass.valueOf(bookingDTO.getFlightClass()));
+
+
+        bookingRepository.save(booking);
+
+        return bookingDTO;
+    }
+
+    @Transactional
+    public BookingDTO editBooking(BookingDTO bookingDTO, Long bookingId) {
+        Flight flight = flightRepository.findById(bookingDTO.getFlightId())
+                .orElseThrow(() -> new EntityNotFoundException("Flight Id isn't valid"));
+        Passenger passenger = passengerRepository.findById(bookingDTO.getPassengerId())
+                .orElseThrow(() -> new EntityNotFoundException("Passenger Id isn't valid"));
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new EntityNotFoundException("Booking with Id " + bookingId + " Not Found"));
+
+        booking.setFlight(flight);
+        booking.setPassenger(passenger);
+        booking.setFlightClass(FlightClass.valueOf(bookingDTO.getFlightClass()));
 
         bookingRepository.save(booking);
 
@@ -85,7 +104,7 @@ public class BookingService {
             bookingDTOS.add(
                     new BookingDTO(b.getFlight().getId(),
                             b.getPassenger().getId(),
-                            b.getFlightClass())
+                            b.getFlightClass().toString())
             );
         });
         return bookingDTOS;
