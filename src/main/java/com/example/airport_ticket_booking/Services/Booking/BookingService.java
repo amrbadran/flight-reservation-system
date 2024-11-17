@@ -2,17 +2,16 @@ package com.example.airport_ticket_booking.Services.Booking;
 
 import com.example.airport_ticket_booking.DTO.Booking.BookingDTO;
 import com.example.airport_ticket_booking.Entities.Booking.Booking;
-import com.example.airport_ticket_booking.Entities.Passenger.Passenger;
 import com.example.airport_ticket_booking.Exceptions.EntityNotFoundException;
 import com.example.airport_ticket_booking.Repositories.Booking.BookingRepository;
-import com.example.airport_ticket_booking.Repositories.Passenger.PassengerRepository;
+import com.example.airport_ticket_booking.Services.Passenger.AuthorizationService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookingService {
@@ -20,7 +19,7 @@ public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
     @Autowired
-    private PassengerRepository passengerRepository;
+    private AuthorizationService authorizationService;
 
     public List<BookingDTO> getAllBooking() {
         List<Booking> bookings = bookingRepository.findAll();
@@ -37,16 +36,22 @@ public class BookingService {
 
 
     public List<BookingDTO> getAllPassengerBooking(Long passengerId, String username) {
-        Optional<Passenger> passenger = passengerRepository.findPassengerByUsername(username);
-
-        if (!passenger.isPresent() || !passenger.get().getId().equals(passengerId)) {
-            throw new AccessDeniedException("you can't access this resource");
+        if (!authorizationService.isPassengerAuthorizedToBooking(passengerId, username)) {
+            throw new AccessDeniedException("You can't Access this resource");
         }
 
         List<Booking> bookings = bookingRepository.findBookingsByPassengerId(passengerId);
 
         return bookingsToDTOS(bookings);
 
+    }
+
+    @Transactional
+    public void deleteBookingById(Long bookingId) {
+        if (!bookingRepository.existsById(bookingId)) {
+            throw new EntityNotFoundException("Booking with id " + bookingId + " not found");
+        }
+        bookingRepository.deleteBookingsById(bookingId);
     }
 
     public List<BookingDTO> bookingsToDTOS(List<Booking> bookings) {

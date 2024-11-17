@@ -31,6 +31,10 @@ public class JwtService {
     private Long EXPIRATION_TIME;
     public static Integer BEARER_POS = 7;
 
+    public String extractUsernameFromHeader(String header){
+        String token = header.substring(JwtService.BEARER_POS);
+        return extractUsername(token);
+    }
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
