@@ -7,6 +7,7 @@ import com.example.airport_ticket_booking.Services.Booking.BookingService;
 import com.example.airport_ticket_booking.Services.Passenger.AuthorizationService;
 import com.example.airport_ticket_booking.Services.Passenger.PassengerService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,8 +54,9 @@ public class PassengerController {
 
     }
 
-    @DeleteMapping("/{pid}/booking/{bid}")
-    public ResponseEntity<String> DeletePassengerBooking(@PathVariable Long pid, @PathVariable Long bid
+    @Operation(summary = "Delete Bookings for Passenger", description = "This endpoint Delete a booking booked by some passenger in system by its id and booking id")
+    @DeleteMapping("/{pid}/bookings/{bid}")
+    public ResponseEntity<String> deletePassengerBooking(@PathVariable Long pid, @PathVariable Long bid
             , @RequestHeader("Authorization") String authorizationHeader) {
 
         String username = jwtService.extractUsernameFromHeader(authorizationHeader);
@@ -66,5 +68,20 @@ public class PassengerController {
         throw new AccessDeniedException("You can't Access this resource");
     }
 
+    @Operation(summary = "Register Bookings for Passenger", description = "This endpoint Register a booking by some passenger in system by its id and booking body that have flight id and flightClass")
+    @PostMapping("/{pid}/bookings")
+    public ResponseEntity<BookingDTO> registerPassengerBooking(@PathVariable Long pid,
+                                                               @RequestHeader("Authorization") String authorizationHeader,
+                                                               @RequestBody @Valid BookingDTO bookingBody) {
+
+        String username = jwtService.extractUsernameFromHeader(authorizationHeader);
+        if (authorizationService.isPassengerAuthorizedToBooking(pid, username)) {
+            bookingBody.setPassengerId(pid); // this to prevent some passenger add booking with another passenger id
+            BookingDTO booking = bookingService.addBooking(bookingBody);
+            return new ResponseEntity<>(booking, HttpStatus.CREATED);
+        }
+
+        throw new AccessDeniedException("You can't Access this resource");
+    }
 
 }

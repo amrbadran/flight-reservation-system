@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface PassengerRepository extends JpaRepository<Passenger,Long> {
 
     Optional<Passenger> findPassengerByUsername(String username);
+
+    Passenger getPassengerById(Long id);
 }

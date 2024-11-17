@@ -21,4 +21,5 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
                                      @Param("minPrice") Double minPrice,
                                      @Param("maxPrice") Double maxPrice);
 
+    Flight getFlightById(Long id);
 }
