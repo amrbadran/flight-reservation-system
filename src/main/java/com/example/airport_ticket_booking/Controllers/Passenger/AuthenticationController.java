@@ -1,6 +1,7 @@
 package com.example.airport_ticket_booking.Controllers.Passenger;
 
 import com.example.airport_ticket_booking.DTO.Passenger.PassengerAuthDTO;
+import com.example.airport_ticket_booking.DTO.Passenger.PassengerLoginResponseDTO;
 import com.example.airport_ticket_booking.Entities.Passenger.Passenger;
 import com.example.airport_ticket_booking.Security.JwtService;
 import com.example.airport_ticket_booking.Services.Passenger.AuthenticationService;

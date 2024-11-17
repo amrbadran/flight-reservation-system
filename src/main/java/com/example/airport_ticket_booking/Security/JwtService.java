@@ -29,6 +29,7 @@ public class JwtService {
     private String SECRET_KEY;
     @Value("${security.jwt.expiration-time}")
     private Long EXPIRATION_TIME;
+    public static Integer BEARER_POS = 7;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

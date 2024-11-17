@@ -47,6 +47,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String,Object>> handleAccessDeniedException(AccessDeniedException ex){
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
+        errorResponse.put("message", ex.getMessage());
+        errorResponse.put("timestamp", System.currentTimeMillis());
 
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
 
 }
