@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,8 +33,14 @@ public class JwtService {
     public static Integer BEARER_POS = 7;
 
     public String extractUsernameFromHeader(String header){
-        String token = header.substring(JwtService.BEARER_POS);
-        return extractUsername(token);
+        try {
+            String token = header.substring(JwtService.BEARER_POS);
+            return extractUsername(token);
+        }
+        catch (RuntimeException e){
+            throw new AccessDeniedException("You can't access this resource");
+        }
+
     }
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
