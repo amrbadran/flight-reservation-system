@@ -1,7 +1,7 @@
-# **Airport Ticket Booking System**
+# **Flight Reservation System**
 
 ## **Overview**
-This is an Airport Ticket Booking System developed using **Spring Boot** for the backend, with **Docker** for containerization and **JWT** for secure authentication. The system allows passengers to search for flights, book tickets, and manage their bookings through a **REST API**.
+This is an Flight Reservation System developed using **Spring Boot** for the backend, with **Docker** for containerization and **JWT** for secure authentication. The system allows passengers to search for flights, book tickets, and manage their bookings through a **REST API**.
 
 ---
 
@@ -23,11 +23,11 @@ This is an Airport Ticket Booking System developed using **Spring Boot** for the
 To get started with the project, clone it to your local machine:
 
 ```bash
-git clone https://github.com/amrbadran/airport-ticket-booking.git
+git clone https://github.com/amrbadran/flight-reservation-system/
 ```
 
 ```bash 
-cd airport-ticket-booking
+cd flight-reservation-system
 ```
 
 ### **2. Docker Setup**
@@ -100,17 +100,7 @@ The SQL commands for creating the database schema are available in the `sql` fol
 ---
 
 
-### **Contributions**
-Feel free to fork the repository and submit pull requests for bug fixes, feature requests, or improvements.
-
----
-
-
 ### **Important Notes**
 - **Swagger UI** is hosted at `http://localhost:8081/swagger-ui.html`.
 - The **JWT authentication** is required for accessing the booking and search functionality.
 - Ensure **Docker** is set up and running before executing the project.
-
----
-
-This README serves as a comprehensive guide to set up and use the **Airport Ticket Booking System** project. Let me know if you need any further clarifications!
